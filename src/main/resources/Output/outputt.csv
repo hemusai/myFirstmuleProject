@@ -1,0 +1,26 @@
+[
+  {
+    "BillingStreet": "111 Boulevard Hausmann",
+    "BillingCity": "Paris",
+    "BillingCountry": "France",
+    "BillingState": "",
+    "Name": "Dog Park Industries",
+    "BillingPostalCode": "75008"
+  },
+  {
+    "BillingStreet": "400 South St",
+    "BillingCity": "San Francisco",
+    "BillingCountry": "USA",
+    "BillingState": "CA",
+    "Name": "Iguana Park Industries",
+    "BillingPostalCode": "91156"
+  },
+  {
+    "BillingStreet": "777 North St",
+    "BillingCity": "San Francisco",
+    "BillingCountry": "USA",
+    "BillingState": "CA",
+    "Name": "Cat Park Industries",
+    "BillingPostalCode": "91156"
+  }
+]

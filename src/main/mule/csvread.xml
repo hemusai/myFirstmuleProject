@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="1a4378da-e8c5-400a-9556-05aa74a4f838" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<file:config name="File_Config" doc:name="File Config" doc:id="d1a425e2-0910-41a6-a5a2-955fd6fc018c" >
+		<file:connection workingDir="C:\Users\hemanthsaieshwar.m\Desktop\Workspace\csvread\src\main\resources\Files" />
+	</file:config>
+	<file:config name="File_Config1" doc:name="File Config" doc:id="e529700b-daee-43a3-abbf-1c5c152f3fab" >
+		<file:connection workingDir="C:\Users\hemanthsaieshwar.m\Desktop\Workspace\csvread\src\main\resources\Files" />
+	</file:config>
+	<file:config name="File_Config2" doc:name="File Config" doc:id="8775ee6d-6a85-48fd-ac28-dbe8be60f417" >
+		<file:connection workingDir="C:\Users\hemanthsaieshwar.m\Desktop\Workspace\csvread\src\main\resources\Output" />
+	</file:config>
+	<file:config name="File_Config3" doc:name="File Config" doc:id="814e2250-d542-4a84-b5a9-0a8c47909f5a" >
+		<file:connection workingDir="C:\Users\hemanthsaieshwar.m\Desktop\Workspace\csvread\src\main\resources\Output" />
+	</file:config>
+	<flow name="csvreadFlow" doc:id="02eb0fae-86cf-4868-aae0-437bf49f1ab3" >
+		<http:listener doc:name="Listener" doc:id="dda453dd-6767-492f-b2ad-5e7174d8ee79" config-ref="HTTP_Listener_config" path="/csvread"/>
+		<file:read doc:name="Read" doc:id="33364f40-5b15-45e4-9f12-5660067562e5" config-ref="File_Config" path="C:\Users\hemanthsaieshwar.m\Desktop\Workspace\csvread\src\main\resources\Files\accounts.csv"/>
+		<logger level="INFO" doc:name="Logger" doc:id="a31210c2-526f-422c-9542-d81bfb018dff" message="#[payload]"/>
+		<ee:transform doc:name="Transform Message" doc:id="dd40cafc-6412-4312-abea-aff6293943b7" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<choice doc:name="Choice" doc:id="8343f650-4239-4f09-b9ee-c46f6878a12d" >
+			<when expression="#[sizeOf(payload) &gt; 0]">
+				<ee:transform doc:name="Transform Message" doc:id="e79edb55-50e3-418d-baba-39a0605a9fd6" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+var a = [
+  {
+    "BillingStreet": "Judges colony2",
+    "BillingCity": "Mansoorababd 2",
+    "BillingCountry": "Telangana2",
+    "BillingState": "TS22",
+    "Name": "Shivaji Park2",
+    "BillingPostalCode": "500072"
+  },
+  {
+    "BillingStreet": "Judges colony",
+    "BillingCity": "Mansoorababd",
+    "BillingCountry": "Telangana",
+    "BillingState": "TS",
+    "Name": "Shivaji Park",
+    "BillingPostalCode": "500070"
+  },
+  {
+    "BillingStreet": "Judges colony1",
+    "BillingCity": "SaroorNagar",
+    "BillingCountry": "Telangana8",
+    "BillingState": "TS0",
+    "Name": "Shivaji Park0",
+    "BillingPostalCode": "500073"
+  }
+ ]
+
+input payload json
+output csv header=true
+---
+a + payload]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<file:write doc:name="Write" doc:id="78edb312-2f88-4b6a-93de-c4525d198ff7" config-ref="File_Config3" path="C:\Users\hemanthsaieshwar.m\Desktop\Workspace\csvread\src\main\resources\Output\op1.csv"/>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Transform Message" doc:id="471e2517-5404-4335-9627-4e39dd7344d8" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</otherwise>
+		</choice>
+		<logger level="INFO" doc:name="Logger" doc:id="bd6dd4cc-322f-4c70-a71d-b7d44ec1b5d6" message="Success!"/>
+	</flow>
+</mule>
